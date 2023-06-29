@@ -2,6 +2,7 @@ package com.marble.admin.user;
 
 import com.marble.common.entity.Role;
 import com.marble.common.entity.User;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@Transactional
 public class UserService {
     @Autowired
     private UserRepository userRepo;
@@ -26,20 +28,20 @@ public class UserService {
         return (List<Role>)  roleRepo.findAll();
     }
 
-    public void save(User user) {
-        boolean isUpdatingUser = (user.getId() != null);
+    public void save(User userInForm) {
+        boolean isUpdatingUser = (userInForm.getId() != null);
 
         if (isUpdatingUser) {
-            User existingUser = userRepo.findById(user.getId()).get();
-            if (user.getPassword().isEmpty()) {
-                user.setPassword(existingUser.getPassword());
+            User userInDB = userRepo.findById(userInForm.getId()).get();
+            if (userInForm.getPassword().isEmpty()) {
+                userInForm.setPassword(userInDB.getPassword());
             } else {
-                encodePassword(user);
+                encodePassword(userInForm);
             }
         } else {
-            encodePassword(user);
+            encodePassword(userInForm);
         }
-        userRepo.save(user);
+        userRepo.save(userInForm);
     }
 
     private void encodePassword(User user) {
@@ -81,5 +83,9 @@ public class UserService {
             throw new UserNotFoundException("Could not found any user with ID " + id);
         }
         userRepo.deleteById(id);
+    }
+
+    public void updateUserEnabledStatus(Integer id, boolean enabled) {
+        userRepo.updateEnabledStatus(id, enabled);
     }
 }
