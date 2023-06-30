@@ -7,6 +7,8 @@
     <title>[[${pageTitle}]]</title>
 <!--    BootStrap CSS-->
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <!--    style.css-->
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
 <!--    jQuery and BootStrap js-->
     <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
@@ -66,6 +68,7 @@
         <h1>Manage Users | [[${pageTitle}]]</h1>
     </div>
     <form th:action="@{/users/save}" method="post" style="max-width: 700px; margin: 0 auto"
+    enctype="multipart/form-data"
     th:object="${user}" onsubmit="return checkEmailUnique(this)">
         <input type="hidden" th:field="*{id}">
         <div class="border border-secondary rounded p-3">
@@ -122,6 +125,23 @@
                     <input type="checkbox" th:field="*{enabled}">
                 </div>
             </div>
+            <!--         Photo      -->
+            <div class="form-group row align-items-center">
+                <label class="col-sm-4 col-form-label">Photos:</label>
+                <div class="col-sm-6">
+                    <input type="hidden" th:field="*{photos}">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="image" id="fileImage"
+                               accept="image/png, image/jpeg, image/jpg, image/heic">
+                        <label class="custom-file-label" for="fileImage">Choose file</label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <img th:src="@{${user.photosImagePath}}" alt="Photos preview"
+                         id="thumbnail" class="img-fluid img-thumbnail shadow">
+                </div>
+            </div>
+
             <!--     Save and Cancel button       -->
             <div class="text-center">
                 <input type="submit" value="Save" class="btn btn-primary m-3">
@@ -129,6 +149,7 @@
             </div>
         </div>
     </form>
+<!--    modal-dialog check duplicate email error-->
     <div class="modal fade text-center" id="modalDialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -158,12 +179,41 @@
     </div>
 </div>
 <script type="text/javascript">
-    <!--   Click CANCEL Button return to /users  -->
+
     $(document).ready(function() {
+        //   Click CANCEL Button return to /users
         $("#buttonCancel").on("click", function () {
             window.location = "[[@{/users}]]";
         });
+        // file image upload preview
+        $("#fileImage").change(function () {
+            fileSize = this.files[0].size;
+
+            if (fileSize > 1048576) {
+                this.setCustomValidity("You must choose an image less than 1MB!");
+                this.reportValidity();
+            } else {
+                this.setCustomValidity("");
+                showImageThumbnail(this);
+            }
+        })
     });
+
+    // show the image preview
+    function showImageThumbnail(fileInput) {
+        var file = fileInput.files[0];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $("#thumbnail").attr("src", e.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
+    // show file name in the image upload
+    $('.custom-file-input').on('change', function() {
+        let fileName = $(this).val().split('\\').pop();
+        $(this).siblings('.custom-file-label').addClass("selected").html(fileName);
+    });
+
     // Check Duplicate
     function checkEmailUnique(form) {
         url ="[[@{/users/check_email}]]";

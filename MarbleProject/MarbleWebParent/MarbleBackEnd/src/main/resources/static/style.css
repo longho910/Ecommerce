@@ -1,4 +1,21 @@
+/* users.html*/
 *.icon-white {color: white}
 *.icon-silver {color: silver}
 *.icon-green {color: green}
 *.icon-gray {color: gray}
+
+/* user_form.html*/
+.custom-file-input:hover ~ .custom-file-label {
+    background-color: #e9ecef;
+}
+
+.custom-file-label {
+    height: 40px;  /* increase height */
+    font-size: 16px; /* increase font size */
+    padding: .375rem .75rem; /* increase padding */
+}
+
+.img-thumbnail {
+    max-width: 100px;
+    max-height: 100px;
+}

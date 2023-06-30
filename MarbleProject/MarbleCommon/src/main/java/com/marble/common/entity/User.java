@@ -1,6 +1,7 @@
 package com.marble.common.entity;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 
 import java.util.*;
 
@@ -129,5 +130,13 @@ public class User {
                 ", enabled=" + enabled +
                 ", roles=" + roles +
                 '}';
+    }
+
+    @Transient
+    public String getPhotosImagePath() {
+        if (id == null || photos == null) {
+            return "/images/Sample_Users_Photos/default-user.png";
+        }
+        return "/users-photos/" + this.id + "/" + this.photos;
     }
 }
