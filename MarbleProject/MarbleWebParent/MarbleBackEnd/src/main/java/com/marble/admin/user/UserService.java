@@ -26,7 +26,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public List<User> listAll() {
-        return (List<User>) userRepo.findAll();
+        return (List<User>) userRepo.findAll(Sort.by("firstName").ascending());
     }
 
     // pagination for user list

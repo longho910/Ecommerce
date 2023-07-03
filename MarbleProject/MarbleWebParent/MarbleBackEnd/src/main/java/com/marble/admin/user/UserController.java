@@ -3,6 +3,7 @@ package com.marble.admin.user;
 import com.marble.admin.FileUploadUtil;
 import com.marble.common.entity.Role;
 import com.marble.common.entity.User;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -103,7 +104,7 @@ public class UserController {
     }
 
     @GetMapping("/users/edit/{userId}")
-    public String editUser(@PathVariable(name="userId") Integer id, Model model,
+    public String editUser(@PathVariable(name = "userId") Integer id, Model model,
                            RedirectAttributes redirectAttributes) {
         try {
             User user = service.get(id);
@@ -112,20 +113,20 @@ public class UserController {
             model.addAttribute("pageTitle", "Edit user (ID: " + id + ")");
             model.addAttribute("listRoles", listRoles);
             return "user_form";
-        }
-        catch(UserNotFoundException ex) {
+        } catch (UserNotFoundException ex) {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
             return "redirect:/users";
         }
     }
+
     @GetMapping("/users/delete/{userId}")
-    public String deleteUser(@PathVariable(name="userId") Integer id, Model model,
-                           RedirectAttributes redirectAttributes) {
+    public String deleteUser(@PathVariable(name = "userId") Integer id, Model model,
+                             RedirectAttributes redirectAttributes) {
         try {
             service.delete(id);
             redirectAttributes.addFlashAttribute("message", "The user ID " + id
                     + " has been deleted successfully");
-        }  catch(UserNotFoundException ex) {
+        } catch (UserNotFoundException ex) {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
         }
         return "redirect:/users";
@@ -143,4 +144,10 @@ public class UserController {
         return "redirect:/users";
     }
 
+    @GetMapping("/users/export/csv")
+    public void exportToCSV(HttpServletResponse response) throws IOException {
+        List<User> listUsers = service.listAll();
+        UserCsvExporter exporter = new UserCsvExporter();
+        exporter.export(listUsers, response);
+    }
 }
