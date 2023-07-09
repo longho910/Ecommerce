@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeLeaf.org"
+      xmlns:sec="https://www.thymeLeaf.org/thymeLeaf-extras-springsecurity6">
+<head th:replace="fragments :: page_head('Error - Marble Admin')"></head>
+<body>
+<div class="container-fluid">
+  <!--    NAV BAR-->
+  <div th:replace="fragments :: navbar"></div>
+  <!--    END NAV BAR-->
+
+  <div class="m-3">
+    <h2>Sorry, you don't have permission to access this page</h2>
+  </div>
+
+  <!--    footer-->
+  <div th:replace="fragments :: footer"></div>
+</div>
+</body>
+</html>
