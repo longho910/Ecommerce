@@ -1,21 +1,9 @@
 <!DOCTYPE html>
 <!--thymeleaf-->
 <html lang="en" xmlns:th="http://www.thymeLeaf.org">
-<head>
-    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" >
-    <title>Home - Marble Admin</title>
-<!--    BootStrap CSS-->
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
-<!--    font awesome-->
-    <link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}">
-<!--    style.css-->
-    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
-<!--    jQuery and BootStrap js-->
-    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<!--head-->
+<head th:replace="fragments :: page_head('Users - Marble Admin')"></head>
 
-</head>
 <body>
 <!-- NAV BAR-->
 <div class="container-fluid">
@@ -30,13 +18,13 @@
            title="Create new user"></a>
         &nbsp;&nbsp;
         <a th:href="@{/users/export/csv}" class="fa-solid fa-file-csv fa-2x icon-green"
-        title="Export to CSV"></a>
+           title="Export to CSV"></a>
         &nbsp;&nbsp;
         <a th:href="@{/users/export/excel}"  class="fa-solid fa-file-excel fa-2x icon-green"
-        title="Export to Excel"></a>
+           title="Export to Excel"></a>
         &nbsp;&nbsp;
         <a th:href="@{/users/export/pdf}" class="fa-solid fa-file-pdf fa-2x icon-green"
-        title="Export to PDF"></a>
+           title="Export to PDF"></a>
 
     </div>
     <!--    END MANAGE USER TEXT & CREATE NEW USER LINK-->
@@ -65,78 +53,78 @@
     </div>
     <!--    END FILTER-->
 
-<!--    TABLE (FULL-DETAILS) -->
+    <!--    TABLE (FULL-DETAILS) -->
     <div class="full-details">
         <table class="table table-border table-striped table-hover table-responsive-xl">
-<!--            TABLE HEAD-->
+            <!--            TABLE HEAD-->
             <thead class="thead-dark">
-                <tr>
-                    <th class="hideable-column">
-                        <th  th:replace="fragments :: column_link('id', 'User ID','tag')"></th>
-                    </th>
+            <tr>
+                <th class="hideable-column">
+                <th  th:replace="fragments :: column_link('id', 'User ID','tag')"></th>
+                </th>
 
-                    <th>Photos</th>
-                    <th class="hideable-column">
-                        <th  th:replace="fragments :: column_link('email', 'Email','tag')"></th>
-                    </th>
-                    <th th:replace="fragments :: column_link('firstName', 'First Name', 'none')"></th>
-                    <th th:replace="fragments :: column_link('lastName', 'Last Name', 'none')"></th>
-                    <th>Roles</th>
-                    <th th:replace="fragments :: column_link('enabled', 'Enabled', 'none')"></th>
-                    <th></th>
-                </tr>
+                <th>Photos</th>
+                <th class="hideable-column">
+                <th  th:replace="fragments :: column_link('email', 'Email','tag')"></th>
+                </th>
+                <th th:replace="fragments :: column_link('firstName', 'First Name', 'none')"></th>
+                <th th:replace="fragments :: column_link('lastName', 'Last Name', 'none')"></th>
+                <th>Roles</th>
+                <th th:replace="fragments :: column_link('enabled', 'Enabled', 'none')"></th>
+                <th></th>
+            </tr>
             </thead>
-<!--            END TABLE HEAD-->
-<!--            TABLE BODY-->
+            <!--            END TABLE HEAD-->
+            <!--            TABLE BODY-->
             <tbody>
-                <tr th:each="user : ${listUsers}">
-                    <td class="hideable-column">[[${user.id}]]</td>
-                    <td>
+            <tr th:each="user : ${listUsers}">
+                <td class="hideable-column">[[${user.id}]]</td>
+                <td>
                         <span th:if="${user.photos == null}" class="fa-solid fa-image-portrait fa-3x icon-silver"
-                            style="font-size: 100px"></span>
-                        <img th:if="${user.photos != null}" th:src="@{${user.photosImagePath}}" alt=""
-                             style="width:100px">
-                    </td>
-                    <td class="hideable-column">[[${user.email}]]</td>
-                    <td>[[${user.firstName}]]</td>
-                    <td>[[${user.lastName}]]</td>
-                    <td>[[${user.roles}]]</td>
-<!--                    Enabled/Disabled -->
-                    <td>
-                        <a th:if="${user.enabled==true}"
-                           th:href="@{'/users/' + ${user.id} + '/enabled/false'}"
-                           class="fas fa-check-circle fa-2x icon-green"
-                           title="Disable this user">
+                              style="font-size: 100px"></span>
+                    <img th:if="${user.photos != null}" th:src="@{${user.photosImagePath}}" alt=""
+                         style="width:100px">
+                </td>
+                <td class="hideable-column">[[${user.email}]]</td>
+                <td>[[${user.firstName}]]</td>
+                <td>[[${user.lastName}]]</td>
+                <td>[[${user.roles}]]</td>
+                <!--                    Enabled/Disabled -->
+                <td>
+                    <a th:if="${user.enabled==true}"
+                       th:href="@{'/users/' + ${user.id} + '/enabled/false'}"
+                       class="fas fa-check-circle fa-2x icon-green"
+                       title="Disable this user">
 
-                        </a>
+                    </a>
 
-                        <a th:if="${user.enabled==false}"
-                           th:href="@{'/users/' + ${user.id} + '/enabled/true'}"
-                           class="fas fa-circle fa-2x icon-gray"
-                           title="Disable this user"></a>
-                    </td>
-<!--                    Edit and Delete Button-->
-                    <td>
-                        <a th:href="@{'/users/edit/' + ${user.id}}"
-                           title="Edit this user"
-                           class="fa-solid fa-pen-to-square fa-2x icon-green"></a>
-                        &nbsp;
-                        <a th:href="@{'/users/delete/' + ${user.id}}"
-                           class="fa-solid fa-trash fa-2x icon-gray link-delete"
-                           th:userId="${user.id}"
-                           title="Delete this user"></a>
-                    </td>
-                </tr>
+                    <a th:if="${user.enabled==false}"
+                       th:href="@{'/users/' + ${user.id} + '/enabled/true'}"
+                       class="fas fa-circle fa-2x icon-gray"
+                       title="Disable this user"></a>
+                </td>
+                <!--                    Edit and Delete Button-->
+                <td>
+                    <a th:href="@{'/users/edit/' + ${user.id}}"
+                       title="Edit this user"
+                       class="fa-solid fa-pen-to-square fa-2x icon-green"></a>
+                    &nbsp;
+                    <a th:href="@{'/users/delete/' + ${user.id}}"
+                       class="fa-solid fa-trash fa-2x icon-gray link-delete"
+                       th:userId="${user.id}"
+                       title="Delete this user"></a>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
-<!--    END TABLE BODY (FULL-DETAILS)-->
-<!--    TABLE (LESS-DETAILS)-->
+    <!--    END TABLE BODY (FULL-DETAILS)-->
+    <!--    TABLE (LESS-DETAILS)-->
     <div class="less-details">
         <div th:each="user : ${listUsers}" class="row m-1">
             <div class="col-4">
                 <span th:if="${user.photos == null}" class="fa-solid fa-image-portrait fa-3x icon-silver"
-                       style="font-size: 100px"></span>
+                      style="font-size: 100px"></span>
                 <img th:if="${user.photos != null}" th:src="@{${user.photosImagePath}}" alt=""
                      style="width:100px">
             </div>
@@ -167,10 +155,10 @@
                        title="Delete this user"></a>
                 </div>
             </div>
-            <div>&nbsp;</div>
+
         </div>
     </div>
-<!--    END TABLE-->
+    <!--    END TABLE-->
 
     <!-- Pagination Wrapper -->
     <div class="card shadow-lg mb-4" >
@@ -239,11 +227,8 @@
         </div>
 
     </div>
-    <div class="text-center">
-        <p>
-            Marble Control Panel - Copyright &copy; Marble
-        </p>
-    </div>
+    <!--    footer-->
+    <div th:replace="fragments :: footer"></div>
 </div>
 
 <script type="text/javascript">
@@ -258,7 +243,7 @@
             $("#confirmModal").modal();
         });
     });
-//     Filter User Management Clear Button
+    //     Filter User Management Clear Button
     function clearFilter() {
         window.location = "[[@{/users}]]"
     }

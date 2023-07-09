@@ -1,30 +1,21 @@
 <!DOCTYPE html>
 <!--thymeleaf-->
 <html lang="en" xmlns:th="http://www.thymeLeaf.org">
-<head>
-    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" >
-    <title>[[${pageTitle}]]</title>
-<!--    BootStrap CSS-->
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
-    <!--    style.css-->
-    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
-<!--    jQuery and BootStrap js-->
-    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-</head>
+<!--head-->
+<head th:replace="fragments :: page_head(${pageTitle})"></head>
+
 <body>
 <div class="container-fluid">
-<!--    NAV BAR-->
+    <!--    NAV BAR-->
     <div th:replace="fragments :: navbar"></div>
-<!--    END NAV BAR-->
+    <!--    END NAV BAR-->
 
     <div>
         <h1>Manage Users | [[${pageTitle}]]</h1>
     </div>
     <form th:action="@{/users/save}" method="post" style="max-width: 700px; margin: 0 auto"
-    enctype="multipart/form-data"
-    th:object="${user}" onsubmit="return checkEmailUnique(this)">
+          enctype="multipart/form-data"
+          th:object="${user}" onsubmit="return checkEmailUnique(this)">
         <input type="hidden" th:field="*{id}">
         <div class="border border-secondary rounded p-3">
             <!--         Email      -->
@@ -104,7 +95,7 @@
             </div>
         </div>
     </form>
-<!--    modal-dialog check duplicate email error-->
+    <!--    modal-dialog check duplicate email error-->
     <div class="modal fade text-center" id="modalDialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -126,12 +117,10 @@
         </div>
 
     </div>
-<!--    footer-->
-    <div class="text-center">
-        <p>
-            Marble Control Panel - Copyright &copy; Marble
-        </p>
-    </div>
+
+    <!--    footer-->
+    <div th:replace="fragments :: footer"></div>
+
 </div>
 <script type="text/javascript">
 

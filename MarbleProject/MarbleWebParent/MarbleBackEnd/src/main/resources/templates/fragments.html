@@ -1,83 +1,122 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeLeaf.org">
-<head>
-    <meta charset="UTF-8">
+<html lang="en" xmlns:th="http://www.thymeLeaf.org"
+      xmlns:sec="https://www.thymeLeaf.org/thymeLeaf-extras-springsecurity6">
+
+<!--head-->
+<head th:fragment="page_head(title)">
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" >
+    <title>[[${title}]]</title>
+    <!--    BootStrap CSS-->
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <!--    font awesome-->
+    <link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}">
+    <!--    style.css-->
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+    <!--    jQuery and BootStrap js-->
+    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+
 </head>
 <body>
-    <!--  NAV BAR FRAGMENT  -->
-    <div th:fragment="navbar">
-        <!-- NAV BAR-->
+<!--  NAV BAR FRAGMENT  -->
+<div th:fragment="navbar">
+    <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+        <input type="submit">
+    </form>
+    <!-- NAV BAR-->
 
-            <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-                <a class="navbar-brand" th:href="@{/}">
-                    <img th:src="@{/images/My project.png}" alt="marble" style="width:105px;height:100px;">
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavBar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="topNavBar">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/users}">Users</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/categories}">Categories</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/brands}">Brands</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/products}">Products</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/customers}">Customers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/shipping}">Shipping</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/orders}">Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/report}">Sales Report</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/articles}">Articles</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/menus}">Menus</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/setting}">Settings</a>
-                        </li>
-                    </ul>
-                </div>
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+        <a class="navbar-brand" th:href="@{/}">
+            <img th:src="@{/images/My_project.png}" alt="marble" style="width:105px;height:100px;">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavBar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="topNavBar">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/users}">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/categories}">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/brands}">Brands</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/products}">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/customers}">Customers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/shipping}">Shipping</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/orders}">Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/report}">Sales Report</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/articles}">Articles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/menus}">Menus</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/setting}">Settings</a>
+                </li>
 
-            </nav>
-        <!-- END NAV BAR-->
-    </div>
+                <li class="nav-item">
+                    <span class="fas fa-user fa-2x icon-silver"></span>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+                       sec:authentication="principal.fullName" ></a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" th:href="@{/account}">Update Profile</a>
+                        <a class="dropdown-item" id="logoutLink" href="">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </nav>
+    <!-- END NAV BAR-->
+</div>
 
 <!-- Header fragment -->
-    <th th:fragment="column_link(fieldName, columnLabel, removeTag)" th:remove="${removeTag}">
-        <a class="text-white"
-           th:href="@{'/users/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir='
+<th th:fragment="column_link(fieldName, columnLabel, removeTag)" th:remove="${removeTag}">
+    <a class="text-white"
+       th:href="@{'/users/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir='
            + ${sortField != fieldName ? sortDir : reverseSortDir}
            + ${keyword != null ? '&keyword=' + keyword : ''}}">
-            [[${columnLabel}]]
-            <i th:if="${sortField != fieldName}" class="fas fa-sort"></i>
-        </a>
-        <span th:if="${sortField == fieldName}"
-              th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
-    </th>
+        [[${columnLabel}]]
+        <i th:if="${sortField != fieldName}" class="fas fa-sort"></i>
+    </a>
+    <span th:if="${sortField == fieldName}"
+          th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
 
-    <!--    Pagination fragment-->
-    <a th:fragment="page_link(pageNum, label)"
-       class="page-link"
-       th:href="@{'/users/page/' + ${pageNum} + '?sortField='
+<!--    Pagination fragment-->
+<a th:fragment="page_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/users/page/' + ${pageNum} + '?sortField='
                        + ${sortField} + '&sortDir=' + ${sortDir}
                        + ${keyword != null ? '&keyword=' + keyword : ''}}">
-        [[${label}]]
-    </a>
+    [[${label}]]
+</a>
+
+<div th:fragment="footer" class="text-center m-3">
+    <p>
+        Marble Control Panel - Copyright &copy; Marble
+    </p>
+</div>
+
 
 </body>
 </html>

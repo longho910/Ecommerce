@@ -3,6 +3,7 @@ package com.marble.common.entity;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 
+
 import java.util.*;
 
 @Entity
@@ -29,7 +30,7 @@ public class User {
 
     private boolean enabled;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable (
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -75,6 +76,11 @@ public class User {
 
     public String getFirstName() {
         return firstName;
+    }
+
+    // full name
+    public String getFullName() {
+        return this.getFirstName() + " " + this.getLastName();
     }
 
     public void setFirstName(String firstName) {
@@ -140,8 +146,5 @@ public class User {
         return "/users-photos/" + this.id + "/" + this.photos;
     }
 
-    @Transient
-    public String getFullName() {
-        return firstName + " " + lastName;
-    }
+
 }

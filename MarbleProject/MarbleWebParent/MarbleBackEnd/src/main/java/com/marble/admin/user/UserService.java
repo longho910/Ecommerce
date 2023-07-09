@@ -7,9 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
+
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -25,8 +26,11 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public User getByEmail(String email) {
+        return userRepo.getUserByEmail(email);
+    }
     public List<User> listAll() {
-        return (List<User>) userRepo.findAll(Sort.by("firstName").ascending());
+        return (List<User>) userRepo.findAll();
     }
 
     // pagination for user list
@@ -42,6 +46,7 @@ public class UserService {
         }
         return userRepo.findAll(pageable);
     }
+
 
     public List<Role> listRoles() {
         return (List<Role>)  roleRepo.findAll();
@@ -61,6 +66,22 @@ public class UserService {
             encodePassword(userInForm);
         }
         return userRepo.save(userInForm);
+    }
+
+    public User updateAccount(User userInForm) {
+        User userInDB = userRepo.findById(userInForm.getId()).get();
+
+        if (!userInForm.getPassword().isEmpty()) {
+            userInDB.setPassword(userInForm.getPassword());
+            encodePassword(userInDB);
+        }
+        if (userInForm.getPhotos() != null) {
+            userInDB.setPhotos(userInForm.getPhotos());
+        }
+        userInDB.setFirstName(userInForm.getFirstName());
+        userInDB.setLastName(userInForm.getLastName());
+
+        return userRepo.save(userInDB);
     }
 
     private void encodePassword(User user) {
