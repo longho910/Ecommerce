@@ -1,6 +1,5 @@
 package com.marble.admin.user.export;
 
-import com.marble.admin.user.AbstratExporter;
 import com.marble.common.entity.User;
 import jakarta.servlet.http.HttpServletResponse;
 import org.supercsv.io.CsvBeanWriter;
@@ -8,9 +7,6 @@ import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class UserCsvExporter extends AbstratExporter {

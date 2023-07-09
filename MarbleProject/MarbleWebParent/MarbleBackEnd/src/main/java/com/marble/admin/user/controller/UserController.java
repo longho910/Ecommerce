@@ -1,6 +1,8 @@
-package com.marble.admin.user;
+package com.marble.admin.user.controller;
 
 import com.marble.admin.FileUploadUtil;
+import com.marble.admin.user.UserNotFoundException;
+import com.marble.admin.user.UserService;
 import com.marble.admin.user.export.UserCsvExporter;
 import com.marble.admin.user.export.UserExcelExporter;
 import com.marble.admin.user.export.UserPdfExporter;
@@ -8,7 +10,6 @@ import com.marble.common.entity.Role;
 import com.marble.common.entity.User;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
@@ -61,7 +62,7 @@ public class UserController {
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("reverseSortDir", reverseSortDir);
         model.addAttribute("keyword", keyword);
-        return "users";
+        return "users/users";
     }
 
     @GetMapping("/users/new")
@@ -72,7 +73,7 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("listRoles", listRoles);
         model.addAttribute("pageTitle", "Create New User");
-        return "user_form";
+        return "users/user_form";
     }
 
     @PostMapping("/users/save")
@@ -115,7 +116,7 @@ public class UserController {
             model.addAttribute("user", user);
             model.addAttribute("pageTitle", "Edit user (ID: " + id + ")");
             model.addAttribute("listRoles", listRoles);
-            return "user_form";
+            return "users/user_form";
         } catch (UserNotFoundException ex) {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
             return "redirect:/users";
@@ -140,7 +141,7 @@ public class UserController {
                                           @PathVariable("status") boolean enabled,
                                           RedirectAttributes redirectAttributes) {
         service.updateUserEnabledStatus(id, enabled);
-        String status = (enabled == true) ? "enabled" : "disabled";
+        String status = (enabled) ? "enabled" : "disabled";
         String message = "The user ID " + id + " has been " + status;
         redirectAttributes.addFlashAttribute("message", message);
 

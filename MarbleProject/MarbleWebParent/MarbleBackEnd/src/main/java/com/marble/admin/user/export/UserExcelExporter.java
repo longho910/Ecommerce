@@ -1,6 +1,5 @@
 package com.marble.admin.user.export;
 
-import com.marble.admin.user.AbstratExporter;
 import com.marble.common.entity.User;
 import com.marble.common.entity.Role;
 import jakarta.servlet.ServletOutputStream;

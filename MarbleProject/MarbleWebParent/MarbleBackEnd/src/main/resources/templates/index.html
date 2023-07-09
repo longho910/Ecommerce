@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <!--thymeleaf-->
-<html lang="en" xmlns:th="http://www.thymeLeaf.org">
+<html lang="en" xmlns:th="http://www.thymeLeaf.org"
+      xmlns:sec="https://www.thymeLeaf.org/thymeLeaf-extras-springsecurity6">
 <head th:replace="fragments :: page_head('Home - Marble Admin')"></head>
 <body>
 <div class="container-fluid">
@@ -8,7 +9,11 @@
     <div th:replace="fragments :: navbar"></div>
     <!--    END NAV BAR-->
     <div>
-        <h1>Marble Control Panel</h1>
+        <h2>Marble Control Panel</h2>
+        Welcome
+        <a th:href="@{/account}"
+           sec:authentication="principal.fullName" ></a>
+        <span sec:authentication="principal.authorities"></span>
     </div>
 
     <!--    footer-->

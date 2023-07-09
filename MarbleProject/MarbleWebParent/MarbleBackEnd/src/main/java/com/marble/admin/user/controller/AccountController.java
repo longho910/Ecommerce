@@ -1,6 +1,7 @@
-package com.marble.admin.user;
+package com.marble.admin.user.controller;
 
 import com.marble.admin.FileUploadUtil;
+import com.marble.admin.user.UserService;
 import org.springframework.ui.Model;
 import com.marble.admin.security.MarbleUserDetails;
 import com.marble.common.entity.User;
@@ -30,7 +31,7 @@ public class AccountController {
 
         model.addAttribute("user", user);
 
-        return "account_form";
+        return "users/account_form";
     }
 
     @PostMapping("/account/update")
