@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<!--thymeleaf-->
+<html lang="en" xmlns:th="http://www.thymeLeaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" >
+    <title>Login - Marble Admin</title>
+    <!--    BootStrap CSS-->
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+</head>
+<body>
+<div class="container-fluid text-center">
+
+    <div>
+        <img th:src="@{/images/My_project.png}" alt="marble" style="width:200px;height:200px;" >
+    </div>
+
+    <!--    form-->
+    <form th:action="@{/login}" method="post" style="max-width: 350px; margin: 0 auto">
+        <div th:if="${param.error}">
+            <p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
+        </div>
+
+        <div th:if="${param.logout}">
+            <p class="text-success">You have been logged out successfully!</p>
+        </div>
+
+        <div class="border border-secondary rounded p-3">
+            <p>Access to Marble Control Panel</p>
+            <p>
+                <label>
+                    <input type="email" name="email" class="form-control" placeholder="Email" required>
+                </label>
+            </p>
+            <p>
+                <label>
+                    <input type="password" name="password" class="form-control" placeholder="Password" required>
+                </label>
+            </p>
+
+            <!--            remember me button-->
+            <p>
+                <label>
+                    <input type="checkbox" name="remember-me">
+                </label>&nbsp; Remember Me
+            </p>
+            <!--            -->
+            <p>
+                <input type="submit" value="Login" class="btn btn-primary">
+            </p>
+        </div>
+    </form>
+    <!--    -->
+
+    <div>
+        <p>
+            Marble Control Panel - Copyright &copy; Marble
+        </p>
+    </div>
+</div>
+
+</body>
+</html>
