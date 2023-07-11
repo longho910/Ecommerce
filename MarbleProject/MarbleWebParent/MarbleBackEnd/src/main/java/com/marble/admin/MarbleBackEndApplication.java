@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EntityScan("com.marble.common.entity")
-@EnableJpaRepositories("com.marble.admin.user")
+@EnableJpaRepositories("com.marble.admin")
 public class MarbleBackEndApplication {
 
     public static void main(String[] args) {

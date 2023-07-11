@@ -1,4 +1,4 @@
-package com.marble.admin;
+package com.marble.admin.user;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

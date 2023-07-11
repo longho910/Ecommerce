@@ -1,4 +1,4 @@
-package com.marble.admin;
+package com.marble.admin.user;
 
 import com.marble.admin.user.UserRepository;
 import com.marble.common.entity.Role;
