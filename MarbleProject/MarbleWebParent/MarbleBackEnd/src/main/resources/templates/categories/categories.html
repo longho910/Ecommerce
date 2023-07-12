@@ -63,10 +63,8 @@
             <tr th:each="category : ${listCategories}">
                 <td class="hideable-column">[[${category.id}]]</td>
                 <td>
-                        <span th:if="${category.image == null}" class="fa-solid fa-image-portrait fa-3x icon-silver"
-                              style="font-size: 100px"></span>
-                    <img th:if="${category.image != null}"  alt=""
-                         style="width:100px">
+                    <img th:src="@{${category.imagePath}}"  alt="category-image"
+                         style="width:100px" class="img-fluid">
                 </td>
                 <td class="hideable-column">[[${category.name}]]</td>
                 <td>[[${category.alias}]]</td>

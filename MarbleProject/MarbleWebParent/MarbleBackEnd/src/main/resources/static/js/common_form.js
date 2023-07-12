@@ -31,3 +31,18 @@ $('.custom-file-input').on('change', function() {
     let fileName = $(this).val().split('\\').pop();
     $(this).siblings('.custom-file-label').addClass("selected").html(fileName);
 });
+
+// modal dialog
+function showModalDialog(title, message) {
+    $("#modalTitle").text(title);
+    $("#modalBody").text(message);
+    $("#modalDialog").modal();
+}
+
+function showErrorModal(message) {
+    showModalDialog("Error", message)
+}
+
+function showWarningModal(message) {
+    showModalDialog("Warning", message)
+}

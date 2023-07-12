@@ -15,7 +15,8 @@
     </div>
     <form th:action="@{/categories/save}" method="post" style="max-width: 500px; margin: 0 auto"
           enctype="multipart/form-data"
-          th:object="${category}" onsubmit="return checkEmailUnique(this)">
+          onsubmit="return checkUnique(this)"
+          th:object="${category}">
         <input type="hidden" th:field="*{id}">
         <div class="border border-secondary rounded p-3">
             <!--         Category Name      -->
@@ -54,7 +55,8 @@
                 <div class="col-sm-8">
                     <input type="hidden" th:field="*{image}">
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" name="fileImage" id="fileImage" required
+                        <input type="file" class="custom-file-input" name="fileImage" id="fileImage"
+                               th:required="${category.imagePath == null}"
                                accept="image/png, image/jpeg, image/jpg, image/heic">
                         <label class="custom-file-label" for="fileImage">Choose file</label>
                     </div>
@@ -63,7 +65,7 @@
                 <label class="col-sm-4 col-form-label"></label>
 
                 <div class="col-sm-8 mt-2">
-                    <img alt="Image preview" th:src="@{/images/image-thumbnail.png}"
+                    <img alt="Image preview" th:src="@{${category.imagePath}}"
                          id="thumbnail" class="img-fluid img-thumbnail shadow">
                 </div>
 
@@ -106,6 +108,8 @@
         </div>
 
     </div>
+<!--    modal dialog-->
+    <div th:replace="modal_fragments :: modal_dialog"></div>
 
     <!--    footer-->
     <div th:replace="fragments :: footer"></div>
@@ -113,6 +117,35 @@
 </div>
 <script type="text/javascript">
     moduleURL="[[@{/categories}]]";
+
+    function checkUnique(form) {
+        url ="[[@{/categories/check_unique}]]";
+        catId = $("#id").val();
+        catName = $("#name").val();
+        catAlias= $("#alias").val();
+        csrfValue = $("input[name='_csrf']").val();
+
+        params = {id: catId, name: catName, alias: catAlias, _csrf: csrfValue};
+
+        $.post(url, params, function (response) {
+            if (response == "OK") {
+                form.submit();
+            }
+            else if (response == "DuplicateName") {
+                showWarningModal("There is another category having same name " + catName);
+            }
+            else if (response == "DuplicateAlias") {
+                showWarningModal("There is another category having same alias " + catAlias);
+            }
+            else {
+                showErrorModal("Unknown response from the server")
+            }
+        }).fail(function () {
+            showErrorModal("Could not connect to the server")
+        })
+
+        return false;
+    }
 
 </script>
 

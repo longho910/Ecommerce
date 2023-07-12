@@ -81,6 +81,12 @@ public class Category {
         this.parent=parent;
     }
 
+    public Category(Integer id, String name, String alias) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.alias = alias;
+    }
 
     // Setters and Getters
 
@@ -138,5 +144,14 @@ public class Category {
 
     public void setChildren(Set<Category> children) {
         this.children = children;
+    }
+
+    // getImagePath
+    @Transient
+    public String getImagePath() {
+        if (this.id == null) {
+            return "/images/image-thumbnail.png";
+        }
+        return "/category-images/" + this.id + "/" + this.image;
     }
 }
