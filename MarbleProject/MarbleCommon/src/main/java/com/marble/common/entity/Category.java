@@ -43,6 +43,12 @@ public class Category {
         this.image="default.png";
     }
 
+    public Category(String name, Integer id) {
+        super();
+        this.name=name;
+        this.id=id;
+    }
+
     public Category(String name, Category parent) {
         this(name);
         this.parent=parent;

@@ -1,95 +1,167 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: page_head('Categories - Shopme Admin', 'none')" />
+<head th:replace="fragments :: page_head('Categories - Marble Admin')"></head>
 <body>
 <div class="container-fluid">
-	<div th:replace="fragments :: navbar"></div>
-	<div>
-		<h2>[[#{category.title}]]</h2>	
-		<a th:href="@{/categories/new}" style="text-decoration: none;" class="fas fa-folder-plus fa-2x icon-dark mr-2"></a>
+    <div th:replace="fragments :: navbar"></div>
+    <div>
+        <h2>Manage Categories</h2>
+        <a th:href="@{/categories/new}" style="text-decoration: none;"
+           class="fas fa-folder-plus fa-2x icon-dark mr-2"></a>
 
-		<a th:href="@{/categories/export/csv}" style="text-decoration: none;" class="fas fa-file-csv fa-2x icon-dark mr-2"></a>
+        <a th:href="@{/categories/export/csv}" style="text-decoration: none;"
+           class="fas fa-file-csv fa-2x icon-dark mr-2"></a>
 
-		<a th:href="@{/categories/export/excel}" style="text-decoration: none;" class="fas fa-file-excel fa-2x icon-dark mr-2"></a>		
+        <a th:href="@{/categories/export/excel}" style="text-decoration: none;"
+           class="fas fa-file-excel fa-2x icon-dark mr-2"></a>
 
-		<a th:href="@{/categories/export/pdf}" style="text-decoration: none;" class="fas fa-file-pdf fa-2x icon-dark"></a>	
-	</div>
-	
-	<div th:replace="fragments :: search_form_and_message" />
+        <a th:href="@{/categories/export/pdf}" style="text-decoration: none;"
+           class="fas fa-file-pdf fa-2x icon-dark"></a>
+    </div>
 
-	<div class="full-details">
-		<table class="table table-bordered table-striped table-hover table-responsive-xl">
-			<thead class="thead-dark">
-				<tr>
-					<th>[[#{category.id.title}]]</th>
-					<th>[[#{category.name.title}]]</th>
-					<th th:replace="fragments :: column_link('name', #{category.name.title}, 'none')" />	
-					<th class="hideable-column">[[#{category.alias.title}]]</th>
-					<th>[[#{category.alias.enabled}]]</th>
-					<th></th>
-				</tr>								
-			</thead>
-			<tbody>
-				<tr th:each="cat : ${listCategories}">
-					<td>[[${cat.id}]]</td>
-					<td>
-					    <span th:if="${cat.imagePath == null}" class="fas fa-folder fa-3x icon-silver"></span>					
-						<img th:if="${cat.imagePath != null}" th:src="@{${cat.imagePath}}" style="width: 100px" class="img-fluid"/>
-					</td>
-					<td>[[${cat.name}]]</td>
-					<td class="hideable-column">[[${cat.alias}]]</td>
-					<td>
-						<div th:replace="fragments :: status(${cat.enabled}, 'category', '/categories/' + ${cat.id})" />
-					</td>
-					<td>
-						<div th:replace="fragments :: edit('category', '/categories/edit/' + ${cat.id})" />
-						&nbsp; 
-						<div th:replace="fragments :: delete('category', ${cat.id}, '/categories/delete/' + ${cat.id}, ${!cat.hasChildren})" />	
-					</td>					
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	
-	<div class="less-details">
-		<div th:each="cat : ${listCategories}" class="row m-1">
-			<div class="col-4">
-				<img th:src="@{${cat.imagePath}}" style="width: 100px" class="img-fluid"/>			
-			</div>
-			<div class="col-8">
-				<div>[[${cat.name}]]</div>
-				<div class="mt-2">
-					<div th:replace="fragments :: status(${cat.enabled}, 'category', '/categories/' + ${cat.id})" />
-					&nbsp; 			
-					<div th:replace="fragments :: edit('category', '/categories/edit/' + ${cat.id})" />
-					&nbsp;
-					<div th:replace="fragments :: delete('category', ${cat.id}, '/categories/delete/' + ${cat.id}, ${!cat.hasChildren})" />
-				</div>
-			</div>
-			<div>&nbsp;</div>
-		</div>	
-	</div>
-	
-	<div th:if="${keyword != null}" class="text-center">
-		<span>[[#{category.keyword.null.message}]]</span>
-		<div th:replace="fragments :: pagination(#{category.pagination.categories})"></div>
-	</div>
-	
-	<div th:unless="${keyword != null}">
-		<div th:replace="fragments :: pagination(#{category.pagination.toplevel.categories})"></div>
-	</div>
-	
-	<div th:replace="modal_fragments :: confirm_modal" />
+    <!--    ALERT MESSAGE-->
+    <div th:if="${message != null}" class="alert alert-success text-center">
+        [[${message}]]
+    </div>
 
-	<div th:replace="fragments :: footer"></div>
+    <!--    FILTER-->
+    <div>
+        <form th:action="@{/users/page/1}" class="form-inline">
+            <input type="hidden" name="sortField" th:value="${sortField}">
+            <input type="hidden" name="sortDir" th:value="${sortDir}">
+            Filter: &nbsp;
+            <input type="search" class="form-control m-3" th:value="${keyword}" name="keyword" required>
+            <button type="submit" class="btn btn-primary" >
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            &nbsp;&nbsp;
+            <button type="button" class="btn btn-secondary" onclick="clearFilter()">
+                <i class="fa-solid fa-eraser"></i>
+            </button>
+        </form>
+    </div>
+    <!--    END FILTER-->
+
+    <!--    TABLE (FULL-DETAILS) -->
+    <div class="full-details">
+        <table class="table table-border table-striped table-hover table-responsive-xl">
+            <!--            TABLE HEAD-->
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Category Image</th>
+                <th>Category Name</th>
+                <th>Alias</th>
+                <th>Enable</th>
+                <th></th>
+
+            </tr>
+            </thead>
+            <!--            END TABLE HEAD-->
+            <!--            TABLE BODY-->
+            <tbody>
+            <tr th:each="category : ${listCategories}">
+                <td class="hideable-column">[[${category.id}]]</td>
+                <td>
+                        <span th:if="${category.image == null}" class="fa-solid fa-image-portrait fa-3x icon-silver"
+                              style="font-size: 100px"></span>
+                    <img th:if="${category.image != null}"  alt=""
+                         style="width:100px">
+                </td>
+                <td class="hideable-column">[[${category.name}]]</td>
+                <td>[[${category.alias}]]</td>
+                <!--                    Enabled/Disabled -->
+                <td>
+                    <a th:if="${category.enabled==true}"
+                       th:href="@{'/categories/' + ${category.id} + '/enabled/false'}"
+                       class="fas fa-check-circle fa-2x icon-green"
+                       title="Disable this category">
+
+                    </a>
+
+                    <a th:if="${category.enabled==false}"
+                       th:href="@{'/categories/' + ${category.id} + '/enabled/true'}"
+                       class="fas fa-circle fa-2x icon-gray"
+                       title="Disable this category"></a>
+                </td>
+                <!--                    Edit and Delete Button-->
+                <td>
+                    <a th:href="@{'/categories/edit/' + ${category.id}}"
+                       title="Edit this category"
+                       class="fa-solid fa-pen-to-square fa-2x icon-green"></a>
+                    &nbsp;
+                    <a th:href="@{'/categories/delete/' + ${category.id}}"
+                       class="fa-solid fa-trash fa-2x icon-gray link-delete"
+                       th:categoryId="${category.id}"
+                       title="Delete this category"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+<!--        END TABLE BODY (FULL-DETAILS)-->
+<!--        TABLE (LESS-DETAILS)-->
+    <div class="less-details">
+        <div th:each="category : ${listCategories}" class="row m-1">
+            <div class="col-4">
+                <span th:if="${category.image == null}" class="fa-solid fa-image-portrait fa-3x icon-silver"
+                      style="font-size: 100px"></span>
+                <img th:if="${category.image != null}"  alt=""
+                     style="width:100px">
+            </div>
+
+            <div class="col-8">
+                <div>[[${category.image}]]</div>
+                <div>[[${category.name}]]</div>
+                <div class="mt-2">
+                    <a th:if="${category.enabled==true}"
+                       th:href="@{'/categories/' + ${category.id} + '/enabled/false'}"
+                       class="fas fa-check-circle fa-2x icon-green"
+                       title="Disable this category">
+
+                    </a>
+
+                    <a th:if="${category.enabled==false}"
+                       th:href="@{'/categories/' + ${category.id} + '/enabled/true'}"
+                       class="fas fa-circle fa-2x icon-gray"
+                       title="Disable this category"></a>
+                    &nbsp;
+                    <a th:href="@{'/categories/edit/' + ${category.id}}"
+                       title="Edit this category"
+                       class="fa-solid fa-pen-to-square fa-2x icon-green"></a>
+                    &nbsp;
+                    <a th:href="@{'/categories/delete/' + ${category.id}}"
+                       class="fa-solid fa-trash fa-2x icon-gray link-delete"
+                       th:categoryId="${category.id}"
+                       title="Delete this category"></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+<!--        END TABLE-->
+
+
+    <!--	<div th:if="${keyword != null}" class="text-center">-->
+    <!--		<span>[[#{category.keyword.null.message}]]</span>-->
+    <!--		<div th:replace="fragments :: pagination(#{category.pagination.categories})"></div>-->
+    <!--	</div>-->
+    <!--	-->
+    <!--	<div th:unless="${keyword != null}">-->
+    <!--		<div th:replace="fragments :: pagination(#{category.pagination.toplevel.categories})"></div>-->
+    <!--	</div>-->
+    <!--	-->
+    <!--	<div th:replace="modal_fragments :: confirm_modal" />-->
+
+    <div th:replace="fragments :: footer"></div>
 
 </div>
 
 <script th:src="@{/js/common_list.js}"></script>
 <script type="text/javascript">
-	moduleURL = "[[@{/categories}]]";
+    moduleURL = "[[@{/categories}]]";
 
-	entityName = "category";
+    entityName = "category";
 </script>
 
 
