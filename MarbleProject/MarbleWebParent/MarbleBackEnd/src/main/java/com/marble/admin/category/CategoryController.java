@@ -47,7 +47,7 @@ public class CategoryController {
         String uploadDir = "../category-images/" + savedCategory.getId();
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 
-        ra.addAttribute("message", "The category has been saved successfully!");
+        ra.addFlashAttribute("message", "The category has been saved successfully!");
         return "redirect:/categories";
     }
 }
