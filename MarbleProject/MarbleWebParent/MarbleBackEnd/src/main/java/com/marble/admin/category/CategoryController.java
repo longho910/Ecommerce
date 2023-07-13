@@ -3,8 +3,6 @@ package com.marble.admin.category;
 import com.marble.admin.FileUploadUtil;
 import com.marble.admin.user.UserNotFoundException;
 import com.marble.common.entity.Category;
-import com.marble.common.entity.Role;
-import com.marble.common.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
@@ -86,4 +84,37 @@ public class CategoryController {
             return "redirect:/categories";
         }
     }
+
+    // edit category
+    @GetMapping("/categories/{id}/enabled/{status}")
+    public String updateCategoryEnabledStatus(@PathVariable("id") Integer id,
+                                          @PathVariable("status") boolean enabled,
+                                          RedirectAttributes redirectAttributes) {
+        service.updateCategoryEnabledStatus(id, enabled);
+        String status = (enabled) ? "enabled" : "disabled";
+        String message = "The category ID " + id + " has been " + status;
+        redirectAttributes.addFlashAttribute("message", message);
+
+        return "redirect:/categories";
+    }
+
+    // delete category
+    @GetMapping("/categories/delete/{id}")
+    public String deleteUser(@PathVariable(name = "id") Integer id, Model model,
+                             RedirectAttributes redirectAttributes) {
+        try {
+            service.delete(id);
+            String categoryDir = "../category-images/" + id;
+            FileUploadUtil.removeDir(categoryDir);
+            redirectAttributes.addFlashAttribute("message", "The category ID " + id
+                    + " has been deleted successfully");
+        } catch (CategoryNotFoundException ex) {
+            redirectAttributes.addFlashAttribute("message", ex.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return "redirect:/categories";
+    }
+
+
 }

@@ -89,13 +89,16 @@
                 </td>
                 <!--                    Edit and Delete Button-->
                 <td>
+                    <!--                    edit -->
                     <a th:href="@{'/categories/edit/' + ${category.id}}"
                        title="Edit this category"
                        class="fa-solid fa-pen-to-square fa-2x icon-green"></a>
                     &nbsp;
-                    <a th:href="@{'/categories/delete/' + ${category.id}}"
+                    <!--                    delete -->
+                    <a th:if="${category.hasChildren == false}"
+                       th:href="@{'/categories/delete/' + ${category.id}}"
                        class="fa-solid fa-trash fa-2x icon-gray link-delete"
-                       th:categoryId="${category.id}"
+                       th:entityId="${category.id}"
                        title="Delete this category"></a>
                 </td>
             </tr>
@@ -133,7 +136,8 @@
                        title="Edit this category"
                        class="fa-solid fa-pen-to-square fa-2x icon-green"></a>
                     &nbsp;
-                    <a th:href="@{'/categories/delete/' + ${category.id}}"
+                    <a th:if="${category.hasChildren == false}"
+                       th:href="@{'/categories/delete/' + ${category.id}}"
                        class="fa-solid fa-trash fa-2x icon-gray link-delete"
                        th:categoryId="${category.id}"
                        title="Delete this category"></a>
@@ -156,6 +160,9 @@
     <!--	-->
     <!--	<div th:replace="modal_fragments :: confirm_modal" />-->
 
+    <!-- modal confirmation for delete  -->
+    <div th:replace="modal_fragments :: confirm_modal"></div>
+
     <div th:replace="fragments :: footer"></div>
 
 </div>
@@ -163,8 +170,14 @@
 <script th:src="@{/js/common_list.js}"></script>
 <script type="text/javascript">
     moduleURL = "[[@{/categories}]]";
-
     entityName = "category";
+
+    $(document).ready(function () {
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            showDeleteConfirmationModal($(this), entityName);
+        });
+    });
 </script>
 
 
