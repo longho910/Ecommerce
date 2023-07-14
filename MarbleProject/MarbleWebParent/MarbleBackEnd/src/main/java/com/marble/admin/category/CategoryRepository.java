@@ -20,8 +20,15 @@ public interface CategoryRepository extends CrudRepository<Category, Integer>,
     @Override
     public Iterable<Category> findAll(Sort sort);
 
+    // search/filter
+    @Query("SELECT c FROM Category c WHERE c.name LIKE %?1%")
+    public Page<Category> search(String keyword, Pageable pageable);
+
+    // sort
     @Query("SELECT c FROM Category c WHERE c.parent.id is NULL")
     public List<Category> findRootCategories(Sort sort);
+
+    // show page for category
     @Query("SELECT c FROM Category c WHERE c.parent.id is NULL")
     public Page<Category> findRootCategories(Pageable pageable);
 
