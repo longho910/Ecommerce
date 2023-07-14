@@ -1,5 +1,6 @@
 package com.marble.admin.user.export;
 
+import com.marble.admin.AbstratExporter;
 import com.marble.common.entity.User;
 import com.marble.common.entity.Role;
 import jakarta.servlet.ServletOutputStream;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class UserExcelExporter extends AbstratExporter {
     public void export(List<User> listUsers, HttpServletResponse response) throws IOException {
-        super.setResponseHeader(response, "application/octet-stream", "xslx");
+        super.setResponseHeader(response, "application/octet-stream", "xslx","users_");
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Users");

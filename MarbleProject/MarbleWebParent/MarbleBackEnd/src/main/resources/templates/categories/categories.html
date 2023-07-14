@@ -12,11 +12,11 @@
         <a th:href="@{/categories/export/csv}" class="fa-solid fa-file-csv fa-2x icon-green"
            title="Export to CSV"></a>
         &nbsp;&nbsp;
-        <a th:href="@{/categories/export/excel}"  class="fa-solid fa-file-excel fa-2x icon-green"
-           title="Export to Excel"></a>
-        &nbsp;&nbsp;
-        <a th:href="@{/categories/export/pdf}" class="fa-solid fa-file-pdf fa-2x icon-green"
-           title="Export to PDF"></a>
+<!--        <a th:href="@{/categories/export/excel}"  class="fa-solid fa-file-excel fa-2x icon-green"-->
+<!--           title="Export to Excel"></a>-->
+<!--        &nbsp;&nbsp;-->
+<!--        <a th:href="@{/categories/export/pdf}" class="fa-solid fa-file-pdf fa-2x icon-green"-->
+<!--           title="Export to PDF"></a>-->
 
     </div>
     <!--    ALERT MESSAGE-->
@@ -37,7 +37,7 @@
                 <th>ID</th>
                 <th>Category Image</th>
                 <th>
-                    <a class="text-white" th:href="@{'/categories/page/' + ${pageNumber} + '?sortDir=' + ${reverseSortDir}
+                    <a class="text-white" th:href="@{'/categories/page/' + ${currentPage} + '?sortDir=' + ${reverseSortDir}
                     + ${keyword != null ? '&keyword=' + keyword : ''}}">
                         Category Name
                     </a>

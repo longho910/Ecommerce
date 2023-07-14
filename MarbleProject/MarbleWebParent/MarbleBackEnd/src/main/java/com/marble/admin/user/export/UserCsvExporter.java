@@ -1,5 +1,6 @@
 package com.marble.admin.user.export;
 
+import com.marble.admin.AbstratExporter;
 import com.marble.common.entity.User;
 import jakarta.servlet.http.HttpServletResponse;
 import org.supercsv.io.CsvBeanWriter;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class UserCsvExporter extends AbstratExporter {
     public void export(List<User> listUsers, HttpServletResponse response) throws IOException {
-        super.setResponseHeader(response, "text/csv", ".csv");
+        super.setResponseHeader(response, "text/csv", ".csv","users_");
 
         ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
 
