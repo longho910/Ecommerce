@@ -2,6 +2,7 @@ package com.marble.admin.category;
 
 import com.marble.admin.FileUploadUtil;
 import com.marble.admin.user.UserNotFoundException;
+import com.marble.admin.user.UserService;
 import com.marble.common.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -24,19 +25,42 @@ public class CategoryController {
     private CategoryService service;
 
     @GetMapping("/categories")
-    public String listAll(@Param("sortDir") String sortDir, Model model) {
+    public String listFirstPage(@Param("sortDir") String sortDir, Model model) {
+        return listByPage(1, sortDir, model);
+    }
+
+    @GetMapping("/categories/page/{pageNumber}")
+    public String listByPage(@PathVariable("pageNumber") int pageNumber,
+                             @Param("sortDir") String sortDir, Model model) {
         if (sortDir == null || sortDir.isEmpty()) {
             sortDir = "asc";
         }
-        List<Category> listCategories = service.listAll(sortDir);
+        CategoryPageInfo pageInfo = new CategoryPageInfo();
+        List<Category> listCategories = service.listByPage(pageInfo, pageNumber, sortDir);
 
         String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+
+        long startCount = (pageNumber - 1) * CategoryService.ROOT_CATEGORIES_PER_PAGE + 1;
+        long endCount = startCount + CategoryService.ROOT_CATEGORIES_PER_PAGE- 1;
+        if (endCount > pageInfo.getTotalElements()) {
+            endCount = pageInfo.getTotalElements();
+        }
+
+        model.addAttribute("totalPages", pageInfo.getTotalPages());
+        model.addAttribute("totalItems", pageInfo.getTotalElements());
+        model.addAttribute("currentPage", pageNumber);
+        model.addAttribute("sortField", "name");
+        model.addAttribute("sortDir", sortDir);
+
+        model.addAttribute("startCount", startCount);
+        model.addAttribute("endCount", endCount);
 
         model.addAttribute("listCategories", listCategories);
         model.addAttribute("reverseSortDir", reverseSortDir);
         model.addAttribute("sortDir", sortDir);
 
         return "categories/categories";
+
     }
 
     @GetMapping("/categories/new")

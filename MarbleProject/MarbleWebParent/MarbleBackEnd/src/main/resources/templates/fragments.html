@@ -141,19 +141,65 @@
 </th>
 
 <!--    Pagination fragment-->
-<a th:fragment="page_link(pageNum, label)"
+<a th:fragment="page_link(moduleURL, pageNum, label)"
    class="page-link"
-   th:href="@{'/users/page/' + ${pageNum} + '?sortField='
+   th:href="@{${moduleURL} + '/page/' + ${pageNum} + '?sortField='
                        + ${sortField} + '&sortDir=' + ${sortDir}
                        + ${keyword != null ? '&keyword=' + keyword : ''}}">
     [[${label}]]
 </a>
 
+<!--FOOTER-->
 <div th:fragment="footer" class="text-center m-3">
     <p>
         Marble Control Panel - Copyright &copy; Marble
     </p>
 </div>
+
+<!-- Pagination Wrapper -->
+<div th:fragment="pagination(moduleURL, entityName)" th:remove="tag" class="card shadow-lg mb-4" >
+    <!-- User Info -->
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
+        <div th:if="${totalItems > 0}" class="m-1 text-center">
+            <span class="font-weight-bold">Showing [[${entityName}]] # </span><span class="badge badge-primary">[[${startCount}]]</span>
+            <span class="font-weight-bold"> to </span><span class="badge badge-primary">[[${endCount}]]</span>
+            <span class="font-weight-bold"> of </span><span class="badge badge-primary">[[${totalItems}]]</span>
+        </div>
+        <div th:if="${totalItems == 0}" class="m-4 text-center">
+            <span class="font-weight-bold text-danger">No [[${entityName}]] found</span>
+        </div>
+    </div>
+    <!-- Pagination -->
+    <div class="card-body" th:if="${totalPages > 1}">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center flex-wrap">
+                <!-- FIRST -->
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: page_link(${moduleURL}, 1, 'First')"></a>
+                </li>
+                <!-- PREVIOUS -->
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: page_link(${moduleURL}, ${currentPage - 1}, 'Previous')"></a>
+                </li>
+                <!-- Display total pages (pagination) -->
+                <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}"
+                    th:each="i : ${#numbers.sequence(1, totalPages)}">
+                    <a th:replace="fragments :: page_link(${moduleURL}, ${i}, ${i})"></a>
+                </li>
+
+                <!-- NEXT-->
+                <li th:class="${currentPage == totalPages ? 'page-item disabled' : 'page-item'}">
+                    <a th:replace="fragments :: page_link(${moduleURL}, ${currentPage + 1}, 'Next')"></a>
+                </li>
+                <!-- LAST-->
+                <li th:class="${currentPage == totalPages ? 'page-item disabled' : 'page-item'}">
+                    <a th:replace="fragments :: page_link(${moduleURL}, ${totalPages}, 'Last')"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
 
 
 </body>

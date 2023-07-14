@@ -3,6 +3,9 @@ package com.marble.admin.category;
 import com.marble.common.entity.Category;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +14,11 @@ import java.util.*;
 @Service
 @Transactional
 public class CategoryService {
+    static final int ROOT_CATEGORIES_PER_PAGE = 4;
     @Autowired
     private CategoryRepository  repo;
 
-    public List<Category> listAll(String sortDir) {
+    public List<Category> listByPage(CategoryPageInfo pageInfo, int pageNumber, String sortDir) {
         Sort sort = Sort.by("name");
 
         if (sortDir.equals("asc")) {
@@ -24,14 +28,24 @@ public class CategoryService {
             sort = sort.descending();
         }
 
-        List<Category> rootCategories = repo.findRootCategories(sort);
-        return listHierarchicalCategories(rootCategories, sortDir);
+        Pageable pageable = PageRequest.of(pageNumber - 1, ROOT_CATEGORIES_PER_PAGE, sort);
+
+        Page<Category> pageCategories = repo.findRootCategories(pageable);
+        List<Category> rootCategories = pageCategories.getContent();
+
+        pageInfo.setTotalElements(pageCategories.getTotalElements());
+        pageInfo.setTotalPages(pageCategories.getTotalPages());
+
+        int index = 1 + (pageNumber - 1) * ROOT_CATEGORIES_PER_PAGE;
+
+
+        return listHierarchicalCategories(rootCategories, sortDir, index);
     }
 
 
-    private List<Category> listHierarchicalCategories(List<Category> rootCategories, String sortDir) {
+    private List<Category> listHierarchicalCategories(List<Category> rootCategories, String sortDir, int index) {
         List<Category> hierarchicalCategories = new ArrayList<>();
-        int index = 1;
+//        int index = 1;
 
         for (Category rootCategory : rootCategories) {
             hierarchicalCategories.add(Category.copyFull(rootCategory, index + " "
