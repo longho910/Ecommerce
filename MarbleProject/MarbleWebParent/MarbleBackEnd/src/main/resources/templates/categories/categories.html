@@ -11,39 +11,23 @@
         &nbsp;&nbsp;
         <a th:href="@{/categories/export/csv}" class="fa-solid fa-file-csv fa-2x icon-green"
            title="Export to CSV"></a>
-        &nbsp;&nbsp;
-<!--        <a th:href="@{/categories/export/excel}"  class="fa-solid fa-file-excel fa-2x icon-green"-->
-<!--           title="Export to Excel"></a>-->
-<!--        &nbsp;&nbsp;-->
-<!--        <a th:href="@{/categories/export/pdf}" class="fa-solid fa-file-pdf fa-2x icon-green"-->
-<!--           title="Export to PDF"></a>-->
 
     </div>
-    <!--    ALERT MESSAGE-->
-    <div th:if="${message != null}" class="alert alert-success text-center">
-        [[${message}]]
-    </div>
 
-    <!--    FILTER-->
-    <div th:replace="fragments :: search_form('/categories/page/1')"></div>
-    <!--    END FILTER-->
+    <!--    SEARCH/FILTER AND ALERT MESSAGE-->
+    <div th:replace="fragments :: search_form_and_message('/categories/page/1')"></div>
+    <!--    END SEARCH/FILTER AND ALERT MESSAGE-->
 
     <!--    TABLE (FULL-DETAILS) -->
     <div class="full-details">
-        <table class="table table-border table-striped table-hover table-responsive-xl">
+        <table class="table table-border table-striped table-hover table-responsive-xl" style="width: 100%">
             <!--            TABLE HEAD-->
             <thead class="thead-dark">
             <tr>
                 <th>ID</th>
                 <th>Category Image</th>
-                <th>
-                    <a class="text-white" th:href="@{'/categories/page/' + ${currentPage} + '?sortDir=' + ${reverseSortDir}
-                    + ${keyword != null ? '&keyword=' + keyword : ''}}">
-                        Category Name
-                    </a>
-                    <span th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
-                </th>
-                <th>Alias</th>
+                <th  th:replace="fragments :: column_link('/categories','name', 'Category Name','none')"></th>
+                <th class="hideable-column">Alias</th>
                 <th>Enable</th>
                 <th></th>
 
@@ -53,40 +37,26 @@
             <!--            TABLE BODY-->
             <tbody>
             <tr th:each="category : ${listCategories}">
-                <td class="hideable-column">[[${category.id}]]</td>
+                <td>[[${category.id}]]</td>
                 <td>
                     <img th:src="@{${category.imagePath}}"  alt="category-image"
                          style="width:100px" class="img-fluid">
                 </td>
-                <td class="hideable-column">[[${category.name}]]</td>
-                <td>[[${category.alias}]]</td>
-                <!--                    Enabled/Disabled -->
+                <td>[[${category.name}]]</td>
+                <td class="hideable-column">[[${category.alias}]]</td>
+                <!--                    ENABLE/DISABLE -->
                 <td>
-                    <a th:if="${category.enabled==true}"
-                       th:href="@{'/categories/' + ${category.id} + '/enabled/false'}"
-                       class="fas fa-check-circle fa-2x icon-green"
-                       title="Disable this category">
-
-                    </a>
-
-                    <a th:if="${category.enabled==false}"
-                       th:href="@{'/categories/' + ${category.id} + '/enabled/true'}"
-                       class="fas fa-circle fa-2x icon-gray"
-                       title="Disable this category"></a>
+                    <div th:replace="fragments :: status(${category.enabled}, 'category', '/categories/' + ${category.id})"></div>
                 </td>
-                <!--                    Edit and Delete Button-->
+                <!--                    EDIT AND DELETE-->
                 <td>
-                    <!--                    edit -->
-                    <a th:href="@{'/categories/edit/' + ${category.id}}"
-                       title="Edit this category"
-                       class="fa-solid fa-pen-to-square fa-2x icon-green"></a>
+                    <!--                    EDIT -->
+                    <div th:replace="fragments :: edit('category', '/categories/edit/' + ${category.id})"></div>
                     &nbsp;
-                    <!--                    delete -->
-                    <a th:if="${category.hasChildren == false}"
-                       th:href="@{'/categories/delete/' + ${category.id}}"
-                       class="fa-solid fa-trash fa-2x icon-gray link-delete"
-                       th:entityId="${category.id}"
-                       title="Delete this category"></a>
+
+                    <!--                    DELETE-->
+                    <div th:replace="fragments :: delete('category', ${category.id},
+                    '/categories/delete/' + ${category.id}, ${!category.hasChildren})"></div>
                 </td>
             </tr>
             </tbody>
@@ -97,37 +67,21 @@
     <div class="less-details">
         <div th:each="category : ${listCategories}" class="row m-1">
             <div class="col-4">
-                <span th:if="${category.image == null}" class="fa-solid fa-image-portrait fa-3x icon-silver"
-                      style="font-size: 100px"></span>
-                <img th:if="${category.image != null}"  alt=""
-                     style="width:100px">
+                <img th:src="@{${category.imagePath}}" style="width: 100px" class="img-fluid"/>
             </div>
 
             <div class="col-8">
-                <div>[[${category.image}]]</div>
                 <div>[[${category.name}]]</div>
                 <div class="mt-2">
-                    <a th:if="${category.enabled==true}"
-                       th:href="@{'/categories/' + ${category.id} + '/enabled/false'}"
-                       class="fas fa-check-circle fa-2x icon-green"
-                       title="Disable this category">
-
-                    </a>
-
-                    <a th:if="${category.enabled==false}"
-                       th:href="@{'/categories/' + ${category.id} + '/enabled/true'}"
-                       class="fas fa-circle fa-2x icon-gray"
-                       title="Disable this category"></a>
+                    <!--        ENABLE/DISABLE               -->
+                    <div th:replace="fragments :: status(${category.enabled}, 'category', '/categories/' + ${category.id})"></div>
                     &nbsp;
-                    <a th:href="@{'/categories/edit/' + ${category.id}}"
-                       title="Edit this category"
-                       class="fa-solid fa-pen-to-square fa-2x icon-green"></a>
+                    <!--                    EDIT-->
+                    <div th:replace="fragments :: edit('category', '/categories/edit/' + ${category.id})"></div>
                     &nbsp;
-                    <a th:if="${category.hasChildren == false}"
-                       th:href="@{'/categories/delete/' + ${category.id}}"
-                       class="fa-solid fa-trash fa-2x icon-gray link-delete"
-                       th:categoryId="${category.id}"
-                       title="Delete this category"></a>
+                    <!--                    DELETE-->
+                    <div th:replace="fragments :: delete('category', ${category.id},
+                    '/categories/delete/' + ${category.id}, ${!category.hasChildren})"></div>
                 </div>
             </div>
 
@@ -135,17 +89,6 @@
     </div>
 <!--        END TABLE-->
 
-
-    <!--	<div th:if="${keyword != null}" class="text-center">-->
-    <!--		<span>[[#{category.keyword.null.message}]]</span>-->
-    <!--		<div th:replace="fragments :: pagination(#{category.pagination.categories})"></div>-->
-    <!--	</div>-->
-    <!--	-->
-    <!--	<div th:unless="${keyword != null}">-->
-    <!--		<div th:replace="fragments :: pagination(#{category.pagination.toplevel.categories})"></div>-->
-    <!--	</div>-->
-    <!--	-->
-    <!--	<div th:replace="modal_fragments :: confirm_modal" />-->
 
     <!--    pagination when search/filter-->
     <div th:if="${keyword != null}" class="text-center">

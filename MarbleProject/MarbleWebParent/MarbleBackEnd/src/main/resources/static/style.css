@@ -3,6 +3,7 @@
 *.icon-silver {color: silver}
 *.icon-green {color: green}
 *.icon-gray {color: gray}
+*.icon-dark {color: gray}
 
 /* user_form.html*/
 .custom-file-input:hover ~ .custom-file-label {

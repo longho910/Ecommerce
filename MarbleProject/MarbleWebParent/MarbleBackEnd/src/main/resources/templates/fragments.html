@@ -128,9 +128,9 @@
 </div>
 
 <!-- Header fragment -->
-<th th:fragment="column_link(fieldName, columnLabel, removeTag)" th:remove="${removeTag}">
+<th th:fragment="column_link(moduleURL, fieldName, columnLabel, removeTag)" th:remove="${removeTag}">
     <a class="text-white"
-       th:href="@{'/users/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir='
+       th:href="@{${moduleURL} + '/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir='
            + ${sortField != fieldName ? sortDir : reverseSortDir}
            + ${keyword != null ? '&keyword=' + keyword : ''}}">
         [[${columnLabel}]]
@@ -200,8 +200,8 @@
     </div>
 </div>
 
-<!--    FILTER-->
-<div th:fragment="search_form(moduleURL)">
+<!--    SEARCH/FILTER-->
+<div th:fragment="search_form_and_message(moduleURL)">
     <form th:action="@{${moduleURL}}" class="form-inline">
         <input type="hidden" name="sortField" th:value="${sortField}">
         <input type="hidden" name="sortDir" th:value="${sortDir}">
@@ -215,7 +215,48 @@
             <i class="fa-solid fa-eraser"></i>
         </button>
     </form>
+
+    <!--    ALERT MESSAGE-->
+    <div th:if="${message != null}" class="alert alert-success text-center">
+        [[${message}]]
+    </div>
 </div>
+
+<!-- STATUS -->
+<div th:fragment="status(enabled, entityName, entityURL)" th:remove="tag">
+    <a th:if="${enabled == true}" class="fas fa-check-circle fa-2x icon-green" style="text-decoration: none;"
+       th:href="@{${entityURL} + '/enabled/false'}"
+       th:title="'Disable this ' + ${entityName}"
+    ></a>
+
+    <a th:if="${enabled == false}" class="fas fa-circle fa-2x icon-gray"
+       style="text-decoration: none;"
+       th:href="@{${entityURL} + '/enabled/true'}"
+       th:title="'Enable this ' + ${entityName}"
+    ></a>
+</div>
+
+<!-- STATUS END -->
+
+<!-- EDIT -->
+
+<div th:fragment="edit(entityName, editURL)" th:remove="tag">
+    <a style="text-decoration: none;" class="fas fa-edit fa-2x icon-green" th:href="@{${editURL}}"
+       th:title="'Edit this ' + ${entityName}"></a>
+</div>
+
+<!-- EDIT END -->
+
+<!-- DELETE -->
+<div th:fragment="delete(entityName, entityId, deleteURL, visible)" th:remove="tag">
+    <th:block th:if="${visible}">
+        <a class="fas fa-trash fa-2x icon-gray link-delete"
+           th:href="@{${deleteURL}}"
+           th:entityId="${entityId}"
+           th:title="'Delete this ' + ${entityName}"></a>
+    </th:block>
+</div>
+<!-- DELETE END -->
 
 
 
